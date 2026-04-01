@@ -177,8 +177,8 @@ def runge_kutta_4(f, t, x, h):
 
 if __name__ == "__main__":
     t0 = 1850
-    T = 2300 
-    h = 1
+    T = 2600
+    h = 0.2
     print("Lancement simulation")
     
 
@@ -189,18 +189,16 @@ if __name__ == "__main__":
     print("Lancement Runge-Kutta 4")
     t_rk4, x_rk4 = solve(runge_kutta_4, f, t0, T, x0, h)
 
-    print(f"  CO2 final Euler : {x_euler[-1, 0] * 280/750:.1f} ppm")
-    print(f"  CO2 final RK2   : {x_rk2[-1, 0] * 280/750:.1f} ppm")
-    print(f"  CO2 final RK4   : {x_rk4[-1, 0] * 280/750:.1f} ppm")
+    print(f"  CO2 final Euler : {x_euler[-1, 0] :.1f} ppm")
+    print(f"  CO2 final RK2   : {x_rk2[-1, 0] :.1f} ppm")
+    print(f"  CO2 final RK4   : {x_rk4[-1, 0] :.1f} ppm")
     
     
     plt.figure(figsize=(10, 5))
-    plt.plot(t_euler, x_euler[:, 0] * 280/750, label="Atmosphere")
+    plt.plot(t_euler, x_euler[:, 0], label="Atmosphere")
     # plt.plot(t_euler, x_euler[:, 1], label="Carbonate Rock")
     # plt.plot(t_euler, x_euler[:, 2], label="Deep Ocean")
     plt.plot(t_euler, x_euler[:, 3], label="Fossil Fuel Carbon")
-    # plt.plot(t_euler, x_euler[:, 4], label="Plants")
-    # plt.plot(t_euler, x_euler[:, 5], label="Soils")
     # plt.plot(t_euler, x_euler[:, 6], label="Surface Ocean")
     # plt.plot(t_euler, x_euler[:, 7], label="Veg Land Area %")
     plt.xlabel("Year")
@@ -210,9 +208,18 @@ if __name__ == "__main__":
     plt.legend()
     plt.show()
     
+    plt.figure(figsize=(10, 5))
+    plt.plot(t_euler, x_euler[:, 4], label="Plants")
+    plt.plot(t_euler, x_euler[:, 5], label="Soils")
+    plt.xlabel("Year")
+    plt.ylabel("Amount")
+    plt.title("Carbon Cycle Simulation (Euler) - Plants and Soils")
+    plt.autoscale()
+    plt.legend()
+    plt.show()
     
     plt.figure(figsize=(10, 5))
-    plt.plot(t_rk2, x_rk2[:, 0] * 280/750, label="Atmosphere")
+    plt.plot(t_rk2, x_rk2[:, 0], label="Atmosphere")
     # plt.plot(t_rk2, x_rk2[:, 1], label="Carbonate Rock")
     # plt.plot(t_rk2, x_rk2[:, 2], label="Deep Ocean")
     plt.plot(t_rk2, x_rk2[:, 3], label="Fossil Fuel Carbon")
@@ -228,7 +235,17 @@ if __name__ == "__main__":
     plt.show()
     
     plt.figure(figsize=(10, 5))
-    plt.plot(t_rk4, x_rk4[:, 0] * 280/750, label="Atmosphere")
+    plt.plot(t_rk2, x_rk2[:, 4], label="Plants")
+    plt.plot(t_rk2, x_rk2[:, 5], label="Soils")
+    plt.xlabel("Year")
+    plt.ylabel("Amount")
+    plt.title("Carbon Cycle Simulation (Runge-Kutta 2) - Plants and Soils")
+    plt.autoscale()
+    plt.legend()
+    plt.show()
+    
+    plt.figure(figsize=(10, 5))
+    plt.plot(t_rk4, x_rk4[:, 0], label="Atmosphere")
     # plt.plot(t_rk4, x_rk4[:, 1], label="Carbonate Rock")
     # plt.plot(t_rk4, x_rk4[:, 2], label="Deep Ocean")
     plt.plot(t_rk4, x_rk4[:, 3], label="Fossil Fuel Carbon")
@@ -239,6 +256,16 @@ if __name__ == "__main__":
     plt.xlabel("Year")
     plt.ylabel("Amount")
     plt.title("Carbon Cycle Simulation (Runge-Kutta 4)")
+    plt.autoscale()
+    plt.legend()
+    plt.show()
+    
+    plt.figure(figsize=(10, 5))
+    plt.plot(t_rk4, x_rk4[:, 4], label="Plants")
+    plt.plot(t_rk4, x_rk4[:, 5], label="Soils")
+    plt.xlabel("Year")
+    plt.ylabel("Amount")
+    plt.title("Carbon Cycle Simulation (Runge-Kutta 4) - Plants and Soils")
     plt.autoscale()
     plt.legend()
     plt.show()
