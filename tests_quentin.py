@@ -68,7 +68,6 @@ def pCO2Oc(KCO2, HCO3, CO3):
 FossFuelData = np.array([[1850.0, 0.00], [1875.0, 0.30], [1900.0, 0.60], [1925.0, 1.35], [1950.0, 2.85], [1975.0, 4.95], [2000.0, 7.20], [2025.0, 10.05], [2050.0, 14.85], [2075.0, 20.70], [2100.0, 30.00]])
 # CO2 equivalent of 10.05 Gt carbon is 36.88 Gt CO2
 
-
 # @njit
 def FossilFuelsCombustion(t):
     i = 0
@@ -150,10 +149,13 @@ def solve(phi, f, t0, T, x0, h):
     t = np.arange(t0, T+h, h)
     x = np.zeros((len(t), len(x0)))
     x[0] = x0.copy()
-    print(t)
-    print(x)
     for i in range(len(t)-1):
         x[i+1] = phi(f, t[i], x[i], h) 
+        if x[i+1, 0] > 100000:
+            print(f"Warning: Atmosphere value is very high at time {t[i+1]}: {x[i+1, 0]}")
+            print(x[i+1])
+            print("Terminating simulation to prevent overflow.")
+            break
     return t, x
 
 def euler(f, t, x, h):
@@ -175,9 +177,10 @@ def runge_kutta_4(f, t, x, h):
 
 if __name__ == "__main__":
     t0 = 1850
-    T = 2100
+    T = 2300 
     h = 1
     print("Lancement simulation")
+    
 
     print("Lancement Euler")
     t_euler, x_euler = solve(euler, f, t0, T, x0, h)
@@ -193,16 +196,49 @@ if __name__ == "__main__":
     
     plt.figure(figsize=(10, 5))
     plt.plot(t_euler, x_euler[:, 0] * 280/750, label="Atmosphere")
-    plt.plot(t_euler, x_euler[:, 1], label="Carbonate Rock")
-    plt.plot(t_euler, x_euler[:, 2], label="Deep Ocean")
+    # plt.plot(t_euler, x_euler[:, 1], label="Carbonate Rock")
+    # plt.plot(t_euler, x_euler[:, 2], label="Deep Ocean")
     plt.plot(t_euler, x_euler[:, 3], label="Fossil Fuel Carbon")
-    plt.plot(t_euler, x_euler[:, 4], label="Plants")
-    plt.plot(t_euler, x_euler[:, 5], label="Soils")
-    plt.plot(t_euler, x_euler[:, 6], label="Surface Ocean")
-    plt.plot(t_euler, x_euler[:, 7], label="Veg Land Area %")
+    # plt.plot(t_euler, x_euler[:, 4], label="Plants")
+    # plt.plot(t_euler, x_euler[:, 5], label="Soils")
+    # plt.plot(t_euler, x_euler[:, 6], label="Surface Ocean")
+    # plt.plot(t_euler, x_euler[:, 7], label="Veg Land Area %")
     plt.xlabel("Year")
     plt.ylabel("Amount")
     plt.title("Carbon Cycle Simulation (Euler)")
+    plt.autoscale()
+    plt.legend()
+    plt.show()
+    
+    
+    plt.figure(figsize=(10, 5))
+    plt.plot(t_rk2, x_rk2[:, 0] * 280/750, label="Atmosphere")
+    # plt.plot(t_rk2, x_rk2[:, 1], label="Carbonate Rock")
+    # plt.plot(t_rk2, x_rk2[:, 2], label="Deep Ocean")
+    plt.plot(t_rk2, x_rk2[:, 3], label="Fossil Fuel Carbon")
+    # plt.plot(t_rk2, x_rk2[:, 4], label="Plants")
+    # plt.plot(t_rk2, x_rk2[:, 5], label="Soils")
+    # plt.plot(t_rk2, x_rk2[:, 6], label="Surface Ocean")
+    # plt.plot(t_rk2, x_rk2[:, 7], label="Veg Land Area %")
+    plt.xlabel("Year")
+    plt.ylabel("Amount")
+    plt.title("Carbon Cycle Simulation (Runge-Kutta 2)")
+    plt.autoscale()
+    plt.legend()
+    plt.show()
+    
+    plt.figure(figsize=(10, 5))
+    plt.plot(t_rk4, x_rk4[:, 0] * 280/750, label="Atmosphere")
+    # plt.plot(t_rk4, x_rk4[:, 1], label="Carbonate Rock")
+    # plt.plot(t_rk4, x_rk4[:, 2], label="Deep Ocean")
+    plt.plot(t_rk4, x_rk4[:, 3], label="Fossil Fuel Carbon")
+    # plt.plot(t_rk4, x_rk4[:, 4], label="Plants")
+    # plt.plot(t_rk4, x_rk4[:, 5], label="Soils")
+    # plt.plot(t_rk4, x_rk4[:, 6], label="Surface Ocean")
+    # plt.plot(t_euler, x_euler[:, 7], label="Veg Land Area %")
+    plt.xlabel("Year")
+    plt.ylabel("Amount")
+    plt.title("Carbon Cycle Simulation (Runge-Kutta 4)")
     plt.autoscale()
     plt.legend()
     plt.show()
