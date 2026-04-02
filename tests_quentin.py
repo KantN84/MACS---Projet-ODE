@@ -67,6 +67,7 @@ def pCO2Oc(KCO2, HCO3, CO3):
 # Fossil fuels
 FossFuelData0 = np.array([[1850.0, 0.00], [1875.0, 0.30], [1900.0, 0.60], [1925.0, 1.35], [1950.0, 2.85], [1975.0, 4.95], [2000.0, 7.20], [2025.0, 10.05], [2050.0, 14.85], [2075.0, 20.70], [2100.0, 30.00]])
 # CO2 equivalent of 10.05 Gt carbon is 36.88 Gt CO2
+FossFuelData1 = np.array([[1850.0, 0.00], [1875.0, 0.30], [1900.0, 0.60], [1925.0, 1.35], [1950.0, 2.85], [1975.0, 4.95], [2000.0, 7.20], [2025.0, 10.05], [2050.0, 14.85], [2075.0, 20.70], [2100.0, 30.00], [2125.0, 45.00], [2150.0, 67.50], [2175.0, 101.25], [2200.0, 151.88]])
 
 FossFuelData = FossFuelData0.copy()
 
@@ -153,11 +154,6 @@ def solve(phi, f, t0, T, x0, h):
     x[0] = x0.copy()
     for i in range(len(t)-1):
         x[i+1] = phi(f, t[i], x[i], h) 
-        if x[i+1, 0] > 100000:
-            print(f"Warning: Atmosphere value is very high at time {t[i+1]}: {x[i+1, 0]}")
-            print(x[i+1])
-            print("Terminating simulation to prevent overflow.")
-            break
     return t, x
 
 def euler(f, t, x, h):
