@@ -267,6 +267,31 @@ if __name__ == "__main__":
     plt.autoscale()
     plt.legend()
     plt.show()
-
-
-
+    
+    
+    #Graphique pour l'ordre (Erreur en fct de h)
+    h_values = [0.25, 0.17, 0.09, 0.05, 0.01, 0.005, 0.001, 0.0005]
+    errors_euler = []
+    errors_rk2 = [] 
+    errors_rk4 = []
+    for h in h_values:
+        print(f"Calcul pour h={h}" )
+        t_euler, x_euler = solve(euler, f, t0, T, x0, h)
+        t_rk2, x_rk2 = solve(runge_kutta_2, f, t0, T, x0, h)
+        t_rk4, x_rk4 = solve(runge_kutta_4, f, t0, T, x0, h)
+        errors_euler.append(np.linalg.norm(x_euler[-1, :] - x_rk4[-1, :]))
+        errors_rk2.append(np.linalg.norm(x_rk2[-1, :] - x_rk4[-1, :]))
+        errors_rk4.append(np.linalg.norm(x_rk4[-1, :] - x_rk4[-1, :])) 
+    plt.figure(figsize=(10, 5))
+    plt.plot(h_values, errors_euler, label="Euler", marker='o')
+    plt.plot(h_values, errors_rk2, label="Runge-Kutta 2", marker='o')
+    plt.plot(h_values, errors_rk4, label="Runge-Kutta 4", marker='o')
+    plt.xlabel("Step size (h)")
+    plt.ylabel("Error in final CO2 concentration")
+    plt.title("Error in Final CO2 Concentration vs Step Size")
+    plt.xscale('log')
+    plt.yscale('log')
+    plt.legend()
+    plt.show()
+    
+    
